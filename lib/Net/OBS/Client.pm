@@ -4,7 +4,7 @@ use Moose;
 
 with "Net::OBS::Client::Roles::Client";
 
-our $VERSION = '0.01';
+our $VERSION = '0.0.1';
 
 =head1 AUTHOR
 

@@ -11,45 +11,6 @@ use URI::URL;
 use Path::Class qw/file/;
 use HTTP::Cookies;
 
-=head1 NAME
-
-Net::OBS::Client - The great new Net::OBS::Client!
-
-=head1 VERSION
-
-Version 0.01
-
-=cut
-
-our $VERSION = '0.01';
-
-
-=head1 SYNOPSIS
-
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
-    use Net::OBS::Client;
-
-    my $foo = Net::OBS::Client->new();
-    ...
-
-=head1 ATTRIBUTES
-
-=head2 apiurl -
-
-=head2 useragent -
-
-=head2 oscrc -
-
-
-=head1 METHODS
-
-=head2 handle_get
-
-=cut
-
 has use_oscrc => (
   is      =>    'rw',
   isa     =>    'Bool'
