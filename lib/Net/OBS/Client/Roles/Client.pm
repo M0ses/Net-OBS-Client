@@ -29,7 +29,7 @@ has apiurl => (
 
 has user => (
   is      =>    'rw',
-  isa     =>    'Str',
+  isa     =>    'Str|Undef',
   lazy    =>    1,
   default =>    sub {
     my $self = shift;
@@ -40,7 +40,7 @@ has user => (
 
 has pass => (
   is      =>    'rw',
-  isa     =>    'Str',
+  isa     =>    'Str|Undef',
   lazy    =>    1,
   default =>    sub {
     my $self = shift;
@@ -96,14 +96,16 @@ sub request {
   debug(" $method: $url");
 
   my $req = HTTP::Request->new($method => $url);
-  $req->authorization_basic($self->user,$self->pass);
+  if ( $self->user ) {
+    $req->authorization_basic($self->user,$self->pass);
+  }
 
   my $response = $ua->request($req);
 
   if ($response->is_success) {
     return $response->decoded_content;  # or whatever
   } else {
-      die $response->status_line;
+      die $response->status_line . " while $method Request on $url\n";
   }
 }
 
