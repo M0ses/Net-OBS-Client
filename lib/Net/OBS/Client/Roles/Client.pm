@@ -70,7 +70,15 @@ has oscrc => (
   isa     =>    'Object',
   lazy    =>    1,
   default =>    sub {
-    my $cf =  Config::Tiny->read($ENV{HOME}."/.oscrc");
+    my $rc;
+    if ( -f "$ENV{HOME}/.oscrc" ) {
+      $rc = "$ENV{HOME}/.oscrc";
+    } elsif (-f "$ENV{HOME}/.config/osc/oscrc") {
+      $rc = "$ENV{HOME}/.config/osc/oscrc";
+    } else {
+      die "No oscrc found";
+    }
+    my $cf =  Config::Tiny->read($rc);
     die "Cannot open .oscrc" if ! $cf;
     return $cf;
   }
