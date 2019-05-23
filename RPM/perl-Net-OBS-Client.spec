@@ -12,6 +12,7 @@
 
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
+%global debug_package %{nil}
 
 %define cpan_name Net-OBS-Client
 
