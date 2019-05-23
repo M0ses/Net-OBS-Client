@@ -51,6 +51,7 @@ Requires: perl(HTTP::Cookies)
 Requires: perl(URI::URL)
 Requires: perl(Path::Class)
 
+Provides: perl(Net::OBS::Client)
 %{perl_requires}
 
 %description
