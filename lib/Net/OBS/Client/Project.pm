@@ -18,25 +18,29 @@ package Net::OBS::Client::Project;
 
 use Moose;
 use XML::Structured;
+
 with "Net::OBS::Client::Roles::BuildStatus";
 with "Net::OBS::Client::Roles::Client";
 
 has resultlist => (
   is      => 'rw',
-  isa     => 'ArrayRef',
+  isa     => 'HashRef',
   lazy    => 1,
   default => \&fetch_resultlist
 );
 
 # /build/OBS:Server:Unstable/_result
 sub fetch_resultlist {
-  my $self = shift;
+  my ($self, %opts) = @_;
 
   my $api_path = "/build/" . $self->name . "/_result";
+  my @ext;
 
+  while (my ($k,$v) = each %opts) { push @ext, "$k=$v"; }
+
+  $api_path .= "?" . join '&', @ext if @ext;
   my $list = $self->request( GET => $api_path );
-
-  my $data = XMLin( $self->dtd->resultlist, $list )->{result};
+  my $data = XMLin( $self->dtd->resultlist, $list );
 
   $self->resultlist($data);
 
@@ -68,7 +72,7 @@ sub _get_repo_arch {
   die "repository and arch needed to get code"
     if ( !$self->repository || !$self->arch );
 
-  foreach my $result ( @{ $self->resultlist } ) {
+  foreach my $result ( @{ $self->resultlist->{result} } ) {
     return $result
       if ( $result->{repository} eq $self->repository
       && $result->{arch} eq $self->arch );
