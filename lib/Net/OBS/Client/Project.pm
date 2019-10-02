@@ -30,10 +30,18 @@ has resultlist => (
 
 # /build/OBS:Server:Unstable/_result
 sub fetch_resultlist {
-  my $self = shift;
+  my ($self, %opts) = @_;
 
   my $api_path = "/build/" . $self->name . "/_result";
+  my $ext;
 
+  if (%opts) {
+    while (my ($k,$v) = each %opts) {
+      $ext .= "$k=$v";
+    }
+  }
+
+  $api_path .= "?$ext" if $ext;
   my $list = $self->request( GET => $api_path );
 
   my $data = XMLin( $self->dtd->resultlist, $list )->{result};
