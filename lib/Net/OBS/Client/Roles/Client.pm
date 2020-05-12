@@ -59,6 +59,11 @@ has user_agent => (
   default => sub {
     my $self = shift;
     my $ua = LWP::UserAgent->new;
+    if ($ENV{NET_OBS_CLIENT_DEBUG}) {
+      require LWP::ConsoleLogger::Easy;
+      LWP::ConsoleLogger::Easy->import('debug_ua');
+      debug_ua($ua);
+    }
     $ua->timeout(10);
     $ua->env_proxy;
 
