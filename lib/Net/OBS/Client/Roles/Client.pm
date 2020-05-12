@@ -21,9 +21,11 @@ has apiurl => (
   isa     =>    'Str',
   lazy    =>    1,
   default =>    sub {
-    my $self = shift;
+    my $self    = shift;
+    my $default = 'https://api.opensuse.org/public';
+    return $default if !$self->use_oscrc;
     return $self->oscrc->{general}->{apiurl} if ($self->use_oscrc);
-    return 'https://api.opensuse.org';
+    return $default;
   }
 );
 
@@ -57,6 +59,11 @@ has user_agent => (
   default => sub {
     my $self = shift;
     my $ua = LWP::UserAgent->new;
+    if ($ENV{NET_OBS_CLIENT_DEBUG}) {
+      require LWP::ConsoleLogger::Easy;
+      LWP::ConsoleLogger::Easy->import('debug_ua');
+      debug_ua($ua);
+    }
     $ua->timeout(10);
     $ua->env_proxy;
 
