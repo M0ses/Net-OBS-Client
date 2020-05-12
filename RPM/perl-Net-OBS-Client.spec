@@ -55,8 +55,7 @@ Provides: perl(Net::OBS::Client)
 %{perl_requires}
 
 %description
-TODO: meaningful description
- Simplify usage of open build service API calls in perl
+Net::OBS::Client aims to simplify usage of OBS (https://openbuildservice.org) API calls in perl.
 
 %prep
 %setup -q -n %{cpan_name}-%{version}
