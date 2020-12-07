@@ -5,7 +5,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME             => 'Net::OBS::Client',
-    AUTHOR           => q{Frank Schreiner <schreiner@suse.de>},
+    AUTHOR           => q{Frank Schreiner <fschreiner@suse.de>},
     VERSION_FROM     => 'lib/Net/OBS/Client.pm',
     ABSTRACT_FROM    => 'lib/Net/OBS/Client.pm',
     LICENSE          => 'artistic_2',

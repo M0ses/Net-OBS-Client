@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
@@ -10,18 +10,15 @@ use lib "$FindBin::Bin/../lib";
 
 use Net::OBS::Client::Project;
 
-my $apiurl     = "https://obs-server/public";
 my $project    = 'BaseContainer';
 my $package    = 'openSUSE-Leap-Container-Base';
 my $repository = 'images';
 my $arch       = 'x86_64';
 
 my $p = Net::OBS::Client::Project->new(
-  apiurl     => $apiurl,
   name       => $project,
   repository => $repository,
   arch       => $arch,
-  # use_oscrc  => 0,
 );
 
 $p->user_agent->timeout(0);

@@ -1,9 +1,12 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
 
 use Data::Dumper;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
 
 use Net::OBS::Client::Package;
 
@@ -12,12 +15,16 @@ my $p = Net::OBS::Client::Package->new(
   name       => 'obs-server',
   repository => 'openSUSE_Factory',
   arch       => 'x86_64',
-  use_oscrc  => 0,
-  apiurl     => 'https://api.opensuse.org/public'
 );
 
 my $s = $p->fetch_status();
 
 print Dumper($s);
+
+my $repo    = 'openSUSE_Factory';
+my $arch    = 'x86_64';
+
+print "code: ".$p->code($repo, $arch)."\n";
+
 
 exit 0;

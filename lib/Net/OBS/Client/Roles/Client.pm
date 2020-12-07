@@ -21,11 +21,9 @@ has apiurl => (
   isa     =>    'Str',
   lazy    =>    1,
   default =>    sub {
-    my $self    = shift;
-    my $default = 'https://api.opensuse.org/public';
-    return $default if !$self->use_oscrc;
-    return $self->oscrc->{general}->{apiurl} if ($self->use_oscrc);
-    return $default;
+    return ($_[0]->use_oscrc)
+     ? $_[0]->oscrc->{general}->{apiurl} 
+     : 'https://api.opensuse.org/public';
   }
 );
 

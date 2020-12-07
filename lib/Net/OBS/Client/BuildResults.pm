@@ -24,6 +24,44 @@ use Data::Dumper;
 
 with "Net::OBS::Client::Roles::Client";
 
+=head1 NAME
+
+Net::OBS::Client::BuildResults - fetch binarylist and fileinfo
+
+=head1 SYNOPSIS
+
+  use Net::OBS::Client::BuildResults;
+
+  my $obj = Net::OBS::Client::BuildResults->new(
+    apiurl     => $apiurl,
+    project    => $project,
+    package    => $package,
+    repository => $repo,
+    arch       => $arch,
+  );
+
+  my $bin = $obj->binarylist;
+
+  my $inf = $obj->fileinfo($filename);
+
+
+=head1 ATTRIBUTES
+
+
+=head2 project
+
+
+=head2 package
+
+
+=head2 repository
+
+
+=head2 arch
+
+
+=cut
+
 has project => (
   is  => 'rw',
   isa => 'Str',
@@ -44,6 +82,14 @@ has package => (
   isa => 'Str',
 );
 
+=head1 METHODS
+
+=head2 binarylist - fetch list of binary buildresults
+
+ my $bin = $obj->binarylist();
+
+=cut
+
 sub binarylist {
   my $self = shift;
 
@@ -63,6 +109,12 @@ sub binarylist {
   return XMLin( $dtd, $binarylist )->{binary};
 
 }
+
+=head2 fileinfo - get detailed information about a specific package
+
+ my $bin = $obj->fileinfo($filename);
+
+=cut
 
 sub fileinfo {
   my $self   = shift;
@@ -89,5 +141,23 @@ sub fileinfo {
 
 }
 
-1;
+__PACKAGE__->meta->make_immutable();
 
+=head1 AUTHOR
+
+Frank Schreiner, C<< <fschreiner at suse.de> >>
+
+=head1 SEE ALSO
+
+You can find some examples in the L<contrib/> directory
+
+
+=head1 COPYRIGHT
+
+Copyright 2016 Frank Schreiner <fschreiner@suse.de>
+
+This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
+
+=cut
+
+1;

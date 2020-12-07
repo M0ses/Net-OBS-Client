@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
@@ -12,12 +12,12 @@ use Net::OBS::Client::Project;
 
 $::ENV{NET_OBS_DEBUG} = 1;
 
-my $apiurl  = 'https://api.opensuse.org/public';
 my $project = 'OBS:Server:Unstable';
 my $package = 'obs-server';
+my $repo    = 'openSUSE_Factory';
+my $arch    = 'x86_64';
 
 my $p = Net::OBS::Client::Project->new(
-  apiurl     => $apiurl,
   name       => $project,
   use_oscrc  => 0,
 );
@@ -25,5 +25,8 @@ my $p = Net::OBS::Client::Project->new(
 my $s = $p->fetch_resultlist(package => $package);
 
 print Dumper($s);
+
+print "code: ".$p->code($repo, $arch)."\n";
+print "dirty: ".$p->dirty($repo, $arch)."\n";
 
 exit 0;

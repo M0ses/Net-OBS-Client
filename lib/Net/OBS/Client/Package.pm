@@ -16,12 +16,48 @@
 #
 package Net::OBS::Client::Package;
 
+=head1 NAME
+
+Net::OBS::Client::Package - fetch package information
+
+=head1 SYONPSIS
+
+ use Net::OBS::Client::Package;
+
+  my $obj = Net::OBS::Client::Package->new(
+    project    => 'OBS:Server:Unstable',
+    name       => 'obs-server',
+    repository => 'openSUSE_Factory',
+    arch       => 'x86_64',
+    use_oscrc  => 0,
+    apiurl     => 'https://api.opensuse.org/public'
+  );
+
+  my $s = $obj->fetch_status();
+
+  print "code: ".$p->code($repo, $arch)."\n";
+
+
+=cut
+
 use Moose;
 use XML::Structured;
 
 # define roles
 with "Net::OBS::Client::Roles::BuildStatus";
 with "Net::OBS::Client::Roles::Client";
+
+=head1 ATTRIBUTES
+
+=head2 project
+
+=head2 repository
+
+=head2 arch
+
+=head2 details
+
+=cut
 
 has ['+project','+repository','+arch'] => ( required => 1 );
 
@@ -37,6 +73,14 @@ has _status => (
   default => \&fetch_status
 );
 
+=head1 METHODS
+
+=head2 fetch_status -
+
+  my $s = $ojb->fetch_status();
+
+=cut
+
 sub fetch_status {
   my $self = shift;
 
@@ -49,6 +93,12 @@ sub fetch_status {
   return $data;
 }
 
+=head2 code - get package build code
+
+  my $c = $obj->code;
+
+=cut
+
 sub code {
   return $_[0]->_status->{code};
 }
@@ -56,5 +106,22 @@ sub code {
 
 __PACKAGE__->meta->make_immutable();
 
-1; 
+=head1 AUTHOR
+
+Frank Schreiner, C<< <fschreiner at suse.de> >>
+
+=head1 SEE ALSO
+
+You can find some examples in the L<contrib/> directory
+
+
+=head1 COPYRIGHT
+
+Copyright 2016 Frank Schreiner <fschreiner@suse.de>
+
+This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
+
+=cut
+
+1;
 

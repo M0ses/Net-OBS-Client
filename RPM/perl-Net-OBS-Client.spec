@@ -17,7 +17,7 @@
 %define cpan_name Net-OBS-Client
 
 Name:           perl-%{cpan_name}
-Version:        0.0.1
+Version:        0.0.4
 Release:        1
 Summary:        Simplify usage of open build service API calls in perl
 License:        GPL-1.0+ or Artistic-1.0
