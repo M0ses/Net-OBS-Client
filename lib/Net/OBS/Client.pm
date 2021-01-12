@@ -42,7 +42,7 @@ Net::OBS::Client aims to simplify usage of OBS (https://openbuildservice.org) AP
 
 =head1 AUTHOR
 
-Frank Schreiner, C<< <fschreiner at suse.de> >>
+Frank Schreiner, C<< <frank at samaxi.de> >>
 
 =head1 SEE ALSO
 
@@ -53,7 +53,7 @@ You can find some examples in the L<contrib/> directory
 
 =head1 COPYRIGHT
 
-Copyright 2016 Frank Schreiner <fschreiner@suse.de>
+Copyright 2016 Frank Schreiner <frank@samaxi.de>
 
 This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
 
