@@ -48,7 +48,8 @@ Net::OBS::Client - simple OBS API calls
 =head1 SYNOPSIS
 
   #
-  use Net::OBS::Client->new(
+  use Net::OBS::Client;
+  my $c = Net::OBS::Client->new(
     apiurl     => $apiurl,
     use_oscrc  => 0,
   );
