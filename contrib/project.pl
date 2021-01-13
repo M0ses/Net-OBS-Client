@@ -17,16 +17,16 @@ my $package = 'obs-server';
 my $repo    = 'openSUSE_Factory';
 my $arch    = 'x86_64';
 
-my $p = Net::OBS::Client::Project->new(
-  name       => $project,
+my $c = Net::OBS::Client->new(
   use_oscrc  => 0,
 );
 
-my $s = $p->fetch_resultlist(package => $package);
+my $prj = $c->project(name => $project);
+my $s = $prj->fetch_resultlist(package => $package);
 
 print Dumper($s);
 
-print "code: ".$p->code($repo, $arch)."\n";
-print "dirty: ".$p->dirty($repo, $arch)."\n";
+print "code: ".$prj->code($repo, $arch)."\n";
+print "dirty: ".$prj->dirty($repo, $arch)."\n";
 
 exit 0;

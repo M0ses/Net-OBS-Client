@@ -59,8 +59,6 @@ with "Net::OBS::Client::Roles::Client";
 
 =cut
 
-has ['+project','+repository','+arch'] => ( required => 1 );
-
 has details => (
   is => 'rw',
   isa => 'Str'

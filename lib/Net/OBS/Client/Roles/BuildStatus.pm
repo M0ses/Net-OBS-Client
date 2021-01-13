@@ -55,7 +55,6 @@ has dtd => (
 has name => (
   is => 'ro',
   isa => 'Str',
-  required => 1
 );
 
 1; 

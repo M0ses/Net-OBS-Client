@@ -8,15 +8,15 @@ use Data::Dumper;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Net::OBS::Client::BuildResults;
+use Net::OBS::Client;
 
 my $project = 'OBS:Server:Unstable';
 my $package = 'obs-server';
 my $repo    = 'openSUSE_Factory';
 my $arch    = 'x86_64';
 
-
-my $obj = Net::OBS::Client::BuildResults->new(
+my $c   = Net::OBS::Client->new();
+my $obj = $c->buildresults(
   project    => $project,
   package    => $package,
   repository => $repo,

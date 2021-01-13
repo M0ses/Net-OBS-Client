@@ -8,23 +8,26 @@ use Data::Dumper;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Net::OBS::Client::Package;
+use Net::OBS::Client;
 
-my $p = Net::OBS::Client::Package->new(
+my $c = Net::OBS::Client->new(
+);
+
+my $pkg = $c->package(
   project    => 'OBS:Server:Unstable',
   name       => 'obs-server',
   repository => 'openSUSE_Factory',
   arch       => 'x86_64',
 );
 
-my $s = $p->fetch_status();
+my $s = $pkg->fetch_status();
 
 print Dumper($s);
 
 my $repo    = 'openSUSE_Factory';
 my $arch    = 'x86_64';
 
-print "code: ".$p->code($repo, $arch)."\n";
+print "code: ".$pkg->code($repo, $arch)."\n";
 
 
 exit 0;
