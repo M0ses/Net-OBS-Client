@@ -132,14 +132,14 @@ use_ok('Net::OBS::Client');
 
 my $obj = Net::OBS::Client->new(
   apiurl     => $apiurl,
-  repository => $repo, 
+  repository => $repo,
   arch       => $arch,
   use_oscrc  => 0,
 );
 
 my $obj2 = Net::OBS::Client->new(
   apiurl     => $apiurl,
-  repository => 'unknown', 
+  repository => 'unknown',
   arch       => 'unknown',
   use_oscrc  => 0,
 );
@@ -245,7 +245,7 @@ my $pkg = Net::OBS::Client::Package->new(
   apiurl     => $apiurl,
   name       => $package,
   project    => $project,
-  repository => $repo, 
+  repository => $repo,
   arch       => $arch,
   use_oscrc  => 0,
 );
