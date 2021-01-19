@@ -8,7 +8,7 @@ use Data::Dumper;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Net::OBS::Client::Project;
+use Net::OBS::Client;
 
 $::ENV{NET_OBS_DEBUG} = 1;
 
@@ -21,7 +21,7 @@ my $c = Net::OBS::Client->new(
   use_oscrc  => 0,
 );
 
-my $prj = $c->project(name => $project);
+my $prj = $c->project(name=>$project, repository=>$repo, arch=>$arch);
 my $s = $prj->fetch_resultlist(package => $package);
 
 print Dumper($s);

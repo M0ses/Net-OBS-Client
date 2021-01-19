@@ -10,9 +10,9 @@ use lib "$FindBin::Bin/../lib";
 
 use Net::OBS::Client::Project;
 
-my $project    = 'BaseContainer';
-my $package    = 'openSUSE-Leap-Container-Base';
-my $repository = 'images';
+my $project    = 'OBS:Server:Unstable';
+my $package    = 'obs-server';
+my $repository = 'openSUSE_Factory';
 my $arch       = 'x86_64';
 
 my $p = Net::OBS::Client::Project->new(
@@ -20,8 +20,6 @@ my $p = Net::OBS::Client::Project->new(
   repository => $repository,
   arch       => $arch,
 );
-
-$p->user_agent->timeout(0);
 
 my $s= {result=>[{code=>''}]};
 
@@ -32,6 +30,7 @@ while ($s->{result}->[0]->{code} ne 'published') {
     locallink => 1,
   };
   $d->{oldstate} = $s->{state} if $s->{state};
+  print "Fetching\n".Dumper($d);
   $s = $p->fetch_resultlist(%$d);
   print Dumper($p->dirty);
   print Dumper($p->code);
