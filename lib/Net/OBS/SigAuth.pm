@@ -18,39 +18,67 @@
 #
 ################################################################
 
-package PBuild::SigAuth;
+package Net::OBS::SigAuth;
 
 use MIME::Base64 ();
+use File::Temp qw/tempfile/;
+use Data::Dumper;
 
 use strict;
-
-our $key_id;
-our $key_file;
 
 sub dosshsign {
   my ($signdata, $keyfile, $namespace) = @_;
   die("no key file specified\n") unless $keyfile;
-  my $fh;
-  my $pid = open($fh, '-|');
-  die("pipe open: $!\n") unless defined $pid;
-  if (!$pid) {
-    my $pid2 = open(STDIN, '-|');
-    die("pipe open: $!\n") unless defined $pid2;
-    if (!$pid2) {
-      print STDOUT $signdata or die("write signdata: $!\n");
-      exit 0;
-    }
-    exec('ssh-keygen', '-Y', 'sign', '-n', $namespace, '-f', $keyfile);
-    die("ssh-keygen: $!\n");
-  }
-  my $out = '';
-  1 while sysread($fh, $out, 8192, length($out));
+  my $out = _execute_cmd(['ssh-keygen', '-Y', 'sign', '-n', $namespace, '-f', $keyfile], $signdata);
   die("Signature authentification: bad ssh signature format\n") unless $out =~ s/.*-----BEGIN SSH SIGNATURE-----\n//s;
   die("Signature authentification: bad ssh signature format\n") unless $out =~ s/-----END SSH SIGNATURE-----.*//s;
   my $sig = MIME::Base64::decode_base64($out);
   die("Signature authentification: bad ssh signature\n") unless substr($sig, 0, 6) eq 'SSHSIG';
   return $sig;
 }
+
+sub _execute_cmd {
+  my ($cmd, $data) = @_;
+  my $fh;
+  my $pid = open($fh, '-|');
+  die("pipe open: $!\n") unless defined $pid;
+  if (!$pid) {
+    if ($data) {
+      my $pid2 = open(STDIN, '-|');
+      die("pipe open: $!\n") unless defined $pid2;
+      if (!$pid2) {
+        print STDOUT $data or die("write data: $!\n");
+        exit 0;
+      }
+    }
+    exec(@$cmd);
+    die("@$cmd: $!\n");
+  }
+  my $out = '';
+  1 while sysread($fh, $out, 8192, length($out));
+  return $out;
+}
+
+sub _get_tmp_keyfile_from_agent {
+  my ($keyid) = @_;
+  my ($fh, $filename) = tempfile();
+  my @keys = split("\n", _execute_cmd(['ssh-add','-L']));
+  my $agent_key;
+  my $kl;
+  if ($keyid) {
+    for my $key_line (@keys) {
+      my ($type, $key, $id) = split(" ", $key_line);
+      $kl = $key_line if $id eq $keyid;
+    }
+  } else {
+    $kl = $keys[0];
+  }
+  return if ! $kl;
+  print $fh $kl || die "Could not write to $filename: $!\n";
+  close $fh || die "Could not close $filename: $!\n";
+  return $filename
+}
+
 
 sub generate_authorization {
   my ($auth_param, $keyid, $keyfile) = @_;
@@ -62,14 +90,14 @@ sub generate_authorization {
     if ($h eq '(created)') {
       $tosign .= "(created): $created\n";
     } else {
-      die("Signature authentification: unsupported header element: $h\n");
+      die("Signature authentication: unsupported header element: $h\n");
     }
   }
-  die("Signature authentification: no keyid specified\n") unless defined($keyid);
-  die("Signature authentification: nothing to sign?\n") unless $tosign;
+  die("Signature authentication: no keyid specified\n") unless defined($keyid);
+  die("Signature authentication: nothing to sign?\n") unless $tosign;
   chop $tosign;
   my $algorithm = $auth_param->{'algorithm'} || 'ssh';
-  die("Signature authentification: unsupported algorithm '$algorithm'\n") unless $algorithm eq 'ssh';
+  die("Signature authentication: unsupported algorithm '$algorithm'\n") unless $algorithm eq 'ssh';
   my $sig = dosshsign($tosign, $keyfile, $realm);
   $sig = MIME::Base64::encode_base64($sig, '');
   die("bad keyid '$keyid'\n") if $keyid =~ /\"/;
@@ -78,8 +106,8 @@ sub generate_authorization {
 
 sub get_key_data {
   my ($uri) = @_;
-  my $keyid = $key_id;
-  my $keyfile = $key_file;
+  my $keyid = $::ENV{SSH_PUB_KEY_ID};
+  my $keyfile = _get_tmp_keyfile_from_agent($keyid);
   if (!defined($keyid)) {
     # check if the host includes a user name
     my $authority = $uri->authority;
@@ -103,7 +131,7 @@ sub get_key_data {
 
 sub authenticate {
   my ($class, $ua, $proxy, $auth_param, $response, $request, $arg, $size) = @_;
-  my $uri = $request->uri_canonical;
+  my $uri = $request->uri->canonical;
   return $response unless $uri && !$proxy;
   my ($keyid, $keyfile) = get_key_data($uri);
   my $host_port = $uri->host_port;
@@ -111,9 +139,12 @@ sub authenticate {
   my $h = $ua->get_my_handler('request_prepare', 'm_host_port' => $host_port, sub {
     $_[0]{callback} = sub { $_[0]->header('Authorization' => $auth) };
   });
-  return $ua->request($request->clone, $arg, $size, $response);
+  my $fin = $ua->request($request->clone, $arg, $size, $response);
+  return $fin;
 }
 
 # install handler
 no warnings;
 *LWP::Authen::Signature::authenticate = \&authenticate;
+
+1;
