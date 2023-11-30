@@ -16,3 +16,5 @@ pod2htm*.tmp
 pm_to_blib
 Net-OBS-Client-*
 Net-OBS-Client-*.tar.gz
+.gitignore
+.git

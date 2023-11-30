@@ -1,5 +1,14 @@
 Revision history for Net-OBS-Client
 
+0.1.1 2023-11-30
+
+    * added Net::OBS::SigAuth to MANIFEST
+    * cleanup MANIFEST, removed:
+      * t/02-Net_OBS_Client_Package.t
+      * t/03-Net_OBS_Client_Project.t
+      * t/01-Net_OBS_Client_BuildResults.t
+
+
 0.1.0 2023-11-30
 
     * [feature] Implemented HTTP Signature Authentication

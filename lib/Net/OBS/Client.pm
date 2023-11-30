@@ -8,7 +8,7 @@ use Net::OBS::Client::BuildResults;
 
 with 'Net::OBS::Client::Roles::Client';
 
-our $VERSION = '0.1.0';
+our $VERSION = '0.1.1';
 
 sub project {
   my ($self, @args) = @_;

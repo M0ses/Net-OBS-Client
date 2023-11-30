@@ -1,1 +1,6 @@
-*.bak
+.*\.bak
+\.git/
+\.*\.sw.
+\.gitignore
+ignore.txt
+KankuFile
