@@ -31,6 +31,17 @@ WriteMakefile(
         'URI::URL'            =>  0,
         'Path::Class'         =>  0,
     },
+    META_MERGE    => {
+        'meta-spec' => { version => 2 },
+         resources => {
+             repository => {
+                 type => 'git',
+                 url  => 'https://github.com/M0ses/Net-OBS-Client.git',
+                 web  => 'https://github.com/M0ses/Net-OBS-Client',
+             },
+             bugtracker => {web => 'https://github.com/M0ses/Net-OBS-Client/issues'},
+         },
+    },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Net-OBS-Client-*' },
 );
