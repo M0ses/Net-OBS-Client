@@ -25,8 +25,8 @@ jobs:
       # https://build.opensuse.org/project/show/devel:kanku:images
       # to find more official Images
       project: devel:kanku:images
-      repository: images_leap_15_1
-      package: openSUSE-Leap-15.1-JeOS
+      repository: images_leap_15_6
+      package: openSUSE-Leap-15.6-JeOS
       use_oscrc: 0
   -
     use_module: Kanku::Handler::ImageDownload
@@ -46,7 +46,9 @@ jobs:
     use_module: Kanku::Handler::ExecuteCommandViaSSH
     options:
       commands:
-        - zypper ar obs://devel:kanku:perl devel:kanku:perl
+        - zypper ar obs://devel:kanku:perl/15.6 devel:kanku:perl
         - zypper -n --gpg-auto-import-keys ref -s
         - zypper -n in perl-Net-OBS-Client make sudo
-        - make -C /tmp/kanku install
+        - cp -r /tmp/kanku Net-OBS-Client
+        - cd Net-OBS-Client; perl Makefile.PL
+        - cd Net-OBS-Client; make install
