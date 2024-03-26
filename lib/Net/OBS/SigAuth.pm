@@ -111,6 +111,7 @@ sub get_key_data {
   my $keyfile;
   if ($auth_type eq 'agent' ) {
     $keyfile = _get_tmp_keyfile_from_agent($keyid);
+    die 'No key (keyid: '.($keyid||'NONE').') found in ssh-agent and nofallback expicitly configured!' if !$keyfile and $creds->{nofallback};
   }
   my $username = $creds->{user} || $keyid;
   my $authority = $uri->authority;
@@ -118,21 +119,27 @@ sub get_key_data {
     $username = $1;
     $username =~ s/:.*//;	# ignore password
   }
-  if (!defined($keyfile)) {
-    if ($creds->{keyfile}) {
+  if (!defined($keyfile) && $creds->{keyfile}) {
       $keyfile = $creds->{keyfile};
-    } else {
-      my $_dir = $creds->{keydir} || "$ENV{'HOME'}/.ssh";
+      die "Key file '$keyfile' doesn't exit and nofallback expicitly configured!" if !(-e $keyfile) && $creds->{nofallback};
+  };
+  if (!defined($keyfile)) {
+    my @_dirs = ("$ENV{'HOME'}/.ssh");
+    unshift @_dirs, $creds->{keydir} if ($creds->{keydir});
+    for my $_dir (@_dirs) {
       $_dir =~ s#/$##;
       if (-d "$_dir") {
-        for my $idfile (qw{id_ed25519 id_rsa}) {
+	for my $idfile (qw{id_ed25519 id_rsa}) {
 	  next unless -s "$_dir/$idfile";
 	  $keyfile = "$_dir/$idfile";
 	  last;
-        }
+	}
+      } else {
+	die "Key dir '$_dir' does not exists and nofallback expicitly configured!" if $creds->{nofallback};
       }
     }
   }
+  die "No keyfile found!" unless $keyfile;
   return ($username, $keyid, $keyfile);
 }
 
