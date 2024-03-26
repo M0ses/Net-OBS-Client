@@ -19,6 +19,7 @@ sub project {
     pass       => $self->pass,
     repository => $self->repository,
     arch       => $self->arch,
+    sigauth_credentials => $self->sigauth_credentials,
     @args,
   );
 }
@@ -30,6 +31,7 @@ sub package {
     use_oscrc  => $self->use_oscrc,
     user       => $self->user,
     pass       => $self->pass,
+    sigauth_credentials => $self->sigauth_credentials,
     @args,
   );
 }
@@ -41,6 +43,7 @@ sub buildresults {
     use_oscrc  => $self->use_oscrc,
     user       => $self->user,
     pass       => $self->pass,
+    sigauth_credentials => $self->sigauth_credentials,
     @args,
   );
 }
