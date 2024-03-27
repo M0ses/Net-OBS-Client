@@ -30,6 +30,7 @@ WriteMakefile(
         'HTTP::Cookies'       =>  0,
         'URI::URL'            =>  0,
         'Path::Class'         =>  0,
+        'Const::Fast'         =>  0,
     },
     META_MERGE    => {
         'meta-spec' => { version => 2 },
