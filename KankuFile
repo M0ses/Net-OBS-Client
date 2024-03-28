@@ -46,9 +46,12 @@ jobs:
     use_module: Kanku::Handler::ExecuteCommandViaSSH
     options:
       commands:
-        - zypper ar obs://devel:kanku:perl/15.6 devel:kanku:perl
+        - zypper ar -p 98 obs://openSUSE:Backports:SLE-15-SP6/standard openSUSE:Backports
         - zypper -n --gpg-auto-import-keys ref -s
-        - zypper -n in perl-Net-OBS-Client make sudo
-        - cp -r /tmp/kanku Net-OBS-Client
-        - cd Net-OBS-Client; perl Makefile.PL
-        - cd Net-OBS-Client; make install
+        - zypper -n in make
+        # Let the magic happen!
+        # zypper installs packages based on their perl() Provides
+        # e.g. zypper in 'perl(Const::Fast)'
+        - zypper -n in $(perl -e 'require "/tmp/kanku/Makefile.PL";print "perl($_)\n" for (keys %{$::d{BUILD_REQUIRES}}, keys %{$::d{PREREQ_PM}});')
+        - cd /tmp/kanku;perl Makefile.PL
+        - make -C /tmp/kanku/ test install

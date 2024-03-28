@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
-WriteMakefile(
+%::d =  (
     NAME             => 'Net::OBS::Client',
     AUTHOR           => q{Frank Schreiner <frank@samaxi.de>},
     VERSION_FROM     => 'lib/Net/OBS/Client.pm',
@@ -46,3 +46,5 @@ WriteMakefile(
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Net-OBS-Client-*' },
 );
+WriteMakefile(%::d) if $0 =~ m#^(?:.*/)?Makefile.PL$#;
+1;
